@@ -250,6 +250,11 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
+add_service_files(
+  FILES
+  AddTwoInts.srv
+)
+
 add_message_files(
   FILES
   SensorData.msg
@@ -283,6 +288,14 @@ add_executable(relay src/relay.cpp)
 target_link_libraries(relay ${catkin_LIBRARIES})
 add_dependencies(relay ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(add_two_ints_server src/add_two_ints_server.cpp)
+target_link_libraries(add_two_ints_server ${catkin_LIBRARIES})
+add_dependencies(add_two_ints_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(add_two_ints_client src/add_two_ints_client.cpp)
+target_link_libraries(add_two_ints_client ${catkin_LIBRARIES})
+add_dependencies(add_two_ints_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 add_executable(sensor_publisher src/sensor_publisher.cpp)
 target_link_libraries(sensor_publisher ${catkin_LIBRARIES})
 add_dependencies(sensor_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -294,4 +307,4 @@ add_dependencies(sensor_subscriber ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_
 
 ---
 
-[→ 7章: rosbag](07_rosbag.md)
+[→ 7章: パラメータ](07_parameters.md)
