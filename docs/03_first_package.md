@@ -25,15 +25,21 @@ cd ~/catkin_ws/src
 ### パッケージ作成コマンド
 
 ```bash
-catkin_create_pkg ros_tutorial roscpp std_msgs
+catkin create pkg ros_tutorial --catkin-deps roscpp std_msgs
 ```
 
 **コマンドの意味：**
-- `catkin_create_pkg` ：ROS パッケージを作成するコマンド
+- `catkin create pkg` ：`catkin_tools` のパッケージ作成コマンド
 - `ros_tutorial` ：作成するパッケージの名前
-- `roscpp std_msgs` ：このパッケージが使用する他パッケージ（依存関係）
+- `--catkin-deps roscpp std_msgs` ：このパッケージが使用する catkin 依存パッケージ
   - `roscpp`：C++ で ROS を使うために必要
   - `std_msgs`：標準的なメッセージ型（文字列・数値など）を使うために必要
+
+> **旧コマンドについて**: `catkin_create_pkg` という古いコマンドも同じ機能を持ちます。
+> ```bash
+> catkin_create_pkg ros_tutorial roscpp std_msgs
+> ```
+> `catkin_create_pkg` は `catkin` コアパッケージに含まれており、依存パッケージをフラグなしで並べて指定します。`catkin create pkg` は `catkin_tools` が提供する新しい書き方です。どちらも生成されるファイルは同じです。
 
 実行すると `src/ros_tutorial/` フォルダが作成されます。
 
@@ -199,7 +205,7 @@ rosrun ros_tutorial hello_node
 パッケージを作る基本的な流れをまとめます。
 
 ```
-1. catkin_create_pkg でパッケージ作成
+1. catkin create pkg でパッケージ作成
 2. src/ に .cpp ファイルを書く
 3. CMakeLists.txt に add_executable / target_link_libraries を追加
 4. catkin build でビルド
