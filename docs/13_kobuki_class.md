@@ -171,7 +171,7 @@ target_link_libraries(bounce_robot ${catkin_LIBRARIES})
 
 ## LED とサウンドを使う
 
-Kobuki は LED（2 個）とブザーを搭載しています。**移動不要**で Kobuki のトピック通信を練習できるため、狭いスペースでの演習に最適です。
+Kobuki は LED（2 個）とブザーを搭載しています。**移動不要**で Kobuki のトピック通信を練習できます。
 
 ### LED の制御
 
