@@ -212,7 +212,9 @@ rosparam dump backup.yaml
 rosparam load backup.yaml
 ```
 
-### ビルド（catkin）
+### ビルド・パッケージ作成（catkin）
+
+`catkin build` や `catkin create` は `python3-catkin-tools` パッケージが提供するコマンドです（2章のインストール手順で導入済み）。
 
 | コマンド | 説明 |
 |---------|------|
@@ -221,7 +223,7 @@ rosparam load backup.yaml
 | `catkin build --cmake-args -DCMAKE_BUILD_TYPE=Release` | リリースビルド（最適化あり）|
 | `catkin clean` | ビルド成果物を削除してクリーンにする |
 | `catkin config` | ワークスペースの設定を確認 |
-| `catkin_create_pkg <名前> <依存...>` | 新しいパッケージを作成 |
+| `catkin create pkg <名前> --catkin-deps <依存...>` | 新しいパッケージを作成 |
 
 ```bash
 # 例
@@ -229,9 +231,25 @@ cd ~/catkin_ws
 catkin build
 catkin build ros_tutorial
 catkin clean   # 全パッケージをクリーン
+
+# パッケージ作成
+cd ~/catkin_ws/src
+catkin create pkg my_pkg --catkin-deps roscpp std_msgs
 ```
 
 > ビルド後は必ず `source ~/catkin_ws/devel/setup.bash` を実行するか、ターミナルを開き直してください。
+
+#### 旧コマンド（catkin_make / catkin_create_pkg）
+
+`catkin_tools` が普及する前から使われている旧来のコマンドです。ネット上のサンプルで見かけることがあります。
+
+| 旧コマンド | 新コマンド | 説明 |
+|-----------|-----------|------|
+| `catkin_make` | `catkin build` | ワークスペースのビルド |
+| `catkin_make --pkg <名前>` | `catkin build <名前>` | 特定パッケージのみビルド |
+| `catkin_create_pkg <名前> [依存...]` | `catkin create pkg <名前> --catkin-deps [依存...]` | パッケージ作成 |
+
+`catkin_make` と `catkin build` は**同一ワークスペース内で混在させると壊れます**。このチュートリアルでは一貫して `catkin build` を使ってください。
 
 ### パッケージ検索・移動（rospack・roscd・rosls）
 
