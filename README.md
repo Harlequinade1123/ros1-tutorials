@@ -18,21 +18,22 @@ C++ の基礎知識はあるが、ROS は初めてという方を対象にした
 | 2 | [環境構築](docs/02_setup.md) | インストール・ワークスペース作成 |
 | 3 | [最初のパッケージを作る](docs/03_first_package.md) | パッケージ作成・ビルドの流れ |
 | 4 | [Publisher / Subscriber](docs/04_publisher_subscriber.md) | ROS の基本通信（トピック） |
-| 5 | [launch ファイル](docs/05_launch_files.md) | 複数ノードをまとめて起動する |
+| 5 | [サービス](docs/05_service.md) | リクエスト・レスポンス型の通信 |
 | 6 | [カスタムメッセージ](docs/06_custom_messages.md) | 独自のメッセージ型を定義する |
-| 7 | [rosbag](docs/07_rosbag.md) | トピックの記録と再生 |
-| 8 | [パラメータ](docs/08_parameters.md) | 実行時に値を設定・取得する |
-| 9 | [C++ クラス入門](docs/09_cpp_class_basics.md) | クラスの基本をゼロから学ぶ |
-| 10 | [クラスを使った ROS プログラミング](docs/10_ros_with_class.md) | ノードをクラスで書き直す |
+| 7 | [パラメータ](docs/07_parameters.md) | 実行時に値を設定・取得する |
+| 8 | [launch ファイル](docs/08_launch_files.md) | 複数ノードをまとめて起動する |
+| 9 | [rosbag](docs/09_rosbag.md) | トピックの記録と再生 |
+| 10 | [C++ クラス入門](docs/10_cpp_class_basics.md) | クラスの基本をゼロから学ぶ |
+| 11 | [クラスを使った ROS プログラミング](docs/11_ros_with_class.md) | ノードをクラスで書き直す |
 | 付録 | [コマンドリファレンス](docs/appendix_commands.md) | Ubuntu・ROS コマンド早見表 |
 
 ## Kobuki 演習
 
 | # | 章タイトル | 概要 |
 |---|-----------|------|
-| 11 | [Kobuki 基礎](docs/11_kobuki_basics.md) | 速度コマンド・前進・往復動作（演習 1〜2） |
-| 12 | [Kobuki センサー](docs/12_kobuki_sensors.md) | バンパー・崖・オドメトリ（演習 3〜5） |
-| 13 | [クラスを使った Kobuki プログラミング](docs/13_kobuki_class.md) | クラス設計・LED/サウンド制御（演習 6〜7） |
+| 12 | [Kobuki 基礎](docs/12_kobuki_basics.md) | 速度コマンド・前進・往復動作（演習 1〜2） |
+| 13 | [Kobuki センサー](docs/13_kobuki_sensors.md) | バンパー・崖・オドメトリ（演習 3〜5） |
+| 14 | [クラスを使った Kobuki プログラミング](docs/14_kobuki_class.md) | クラス設計・LED/サウンド制御（演習 6〜7） |
 
 ## 読み進め方
 

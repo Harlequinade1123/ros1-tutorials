@@ -375,4 +375,4 @@ talker では Subscriber を使いませんが、ROS 内部の通信処理（接
 
 ---
 
-[→ 5章: launch ファイル](05_launch_files.md)
+[→ 5章: サービス](05_service.md)

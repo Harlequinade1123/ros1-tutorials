@@ -1,4 +1,4 @@
-# 7章: rosbag ── トピックの記録と再生
+# 9章: rosbag ── トピックの記録と再生
 
 ## rosbag とは
 
@@ -238,4 +238,4 @@ rosparam set /use_sim_time true
 
 ---
 
-[→ 8章: パラメータ](08_parameters.md)
+[→ 10章: C++ クラス入門](10_cpp_class_basics.md)
