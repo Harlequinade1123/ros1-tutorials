@@ -1,26 +1,26 @@
-# 12章: Kobuki 基礎 ── 速度コマンドを送る
+# 15章: Kobuki 基礎 ── 速度コマンドを送る
 
 ## この章を始める前に
 
 > **セットアップについて**
 >
-> Kobuki ドライバ（`kobuki_ros` など）のインストールや USB 接続設定はこの教材では扱いません。  
-> 環境構築済みの PC を使用してください。
+> Kobuki ドライバ（`kobuki_ros` など）のインストールや USB 接続設定はこの教材では扱いません．  
+> 環境構築済みの PC を使用してください．
 
 ---
 
 ## パッケージの作成
 
-Kobuki 用のコードは専用パッケージ `kobuki_tutorial` にまとめます。
+Kobuki 用のコードは専用パッケージ `kobuki_tutorial` にまとめます．
 
 ```bash
 cd ~/catkin_ws/src
 catkin create pkg kobuki_tutorial --catkin-deps roscpp geometry_msgs sensor_msgs nav_msgs
 ```
 
-> **旧コマンド**: `catkin_create_pkg kobuki_tutorial roscpp geometry_msgs sensor_msgs nav_msgs` でも同じ結果になります。
+> **旧コマンド**: `catkin_create_pkg kobuki_tutorial roscpp geometry_msgs sensor_msgs nav_msgs` でも同じ結果になります．
 
-作成後、一度ビルドしておきます：
+作成後，一度ビルドしておきます：
 
 ```bash
 cd ~/catkin_ws && catkin build
@@ -31,24 +31,24 @@ source devel/setup.bash
 
 ## Kobuki とは
 
-**Kobuki** は韓国 Yujin Robot 社の差動二輪ロボットです。TurtleBot2 のベースとして広く使われています。
+**Kobuki** は韓国 Yujin Robot 社の差動二輪ロボットです．TurtleBot2 のベースとして広く使われています．
 
 ---
 
 ## Kobuki の速度制御：Twist メッセージ
 
-`/mobile_base/commands/velocity` トピックに **`geometry_msgs/Twist`** を送ります。
+`/mobile_base/commands/velocity` トピックに **`geometry_msgs/Twist`** を送ります．
 
 ```
 geometry_msgs/Twist:
   linear:
-    x: 前後方向の速度 [m/s]  ← 正が前進、負が後退
+    x: 前後方向の速度 [m/s]  ← 正が前進，負が後退
     y: 0.0（差動二輪は横移動不可）
     z: 0.0
   angular:
     x: 0.0
     y: 0.0
-    z: 旋回角速度 [rad/s]   ← 正が左旋回、負が右旋回
+    z: 旋回角速度 [rad/s]   ← 正が左旋回，負が右旋回
 ```
 
 **このチュートリアルでの速度設定：**
@@ -70,7 +70,7 @@ rostopic pub -1 /mobile_base/commands/velocity geometry_msgs/Twist \
   "linear: {x: 0.0, y: 0.0, z: 0.0} angular: {x: 0.0, y: 0.0, z: 0.0}"
 ```
 
-> `-1` オプションは「1 回だけ送信して終了」です。繰り返し送り続けるよりも安全です。
+> `-1` オプションは「1 回だけ送信して終了」です．繰り返し送り続けるよりも安全です．
 
 ---
 
@@ -144,7 +144,7 @@ rosrun kobuki_tutorial move_forward
 
 ### 課題
 
-コマンドライン引数で前進する **秒数** を指定できるプログラムを書いてください。
+コマンドライン引数で前進する **秒数** を指定できるプログラムを書いてください．
 
 ```bash
 # 0.5 秒前進（約 0.05 m）
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
 
     if (duration > 2.0)
     {
-        ROS_WARN("%.1f 秒は長すぎます。周囲の安全を確認してください", duration);
+        ROS_WARN("%.1f 秒は長すぎます．周囲の安全を確認してください", duration);
     }
 
     ROS_INFO("%.1f 秒間前進します（推定 %.3f m）", duration, 0.1 * duration);
@@ -225,7 +225,7 @@ int main(int argc, char **argv)
 
 ### 課題
 
-**「前進 → 後退」を N 回繰り返す** プログラムを書いてください。
+**「前進 → 後退」を N 回繰り返す** プログラムを書いてください．
 
 ```bash
 # 3 往復する
@@ -315,4 +315,4 @@ int main(int argc, char **argv)
 
 ---
 
-[→ 13章: Kobuki センサー](13_kobuki_sensors.md)
+[→ 16章: Kobuki センサー](16_kobuki_sensors.md)

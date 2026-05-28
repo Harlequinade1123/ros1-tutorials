@@ -1,12 +1,12 @@
-# 6章: カスタムメッセージ
+# 7章: カスタムメッセージ
 
-これまでは `std_msgs::String`（文字列）を使いました。実際のロボット開発では「センサー名・計測値・ID を 1 つにまとめて送りたい」といったケースがよくあります。このような場合に **カスタムメッセージ** を定義します。
+これまでは `std_msgs::String`（文字列）を使いました．実際のロボット開発では「センサー名・計測値・ID を 1 つにまとめて送りたい」といったケースがよくあります．このような場合に **カスタムメッセージ** を定義します．
 
 ---
 
 ## メッセージ定義ファイル（.msg）の作成
 
-パッケージ内に `msg/` フォルダを作ります。
+パッケージ内に `msg/` フォルダを作ります．
 
 ```bash
 mkdir -p ~/catkin_ws/src/ros_tutorial/msg
@@ -43,11 +43,11 @@ float64 speed
 
 ## ビルド設定の変更
 
-カスタムメッセージを使うには、`CMakeLists.txt` と `package.xml` を変更する必要があります。
+カスタムメッセージを使うには，`CMakeLists.txt` と `package.xml` を変更する必要があります．
 
 ### CMakeLists.txt の変更
 
-変更箇所が複数あります。元のファイルを開いて、以下のように変更・追記してください。
+変更箇所が複数あります．元のファイルを開いて，以下のように変更・追記してください．
 
 #### 1. `find_package` に `message_generation` を追加
 
@@ -98,7 +98,7 @@ catkin_package(
 
 #### 4. 各 `add_executable` に `add_dependencies` を追加
 
-カスタムメッセージのヘッダファイルが生成されてからコンパイルするために必要です。
+カスタムメッセージのヘッダファイルが生成されてからコンパイルするために必要です．
 
 ```cmake
 add_executable(talker src/talker.cpp)
@@ -238,7 +238,7 @@ int32 id
 
 ## 現時点での CMakeLists.txt 全体像
 
-混乱しないよう、この時点での `CMakeLists.txt` の完全な内容を示します。
+混乱しないよう，この時点での `CMakeLists.txt` の完全な内容を示します．
 
 ```cmake
 cmake_minimum_required(VERSION 3.0.2)
@@ -307,4 +307,4 @@ add_dependencies(sensor_subscriber ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_
 
 ---
 
-[→ 7章: パラメータ](07_parameters.md)
+[→ 8章: パラメータ](08_parameters.md)

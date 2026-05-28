@@ -1,12 +1,14 @@
-# 11章: クラスを使った ROS プログラミング
+# 14章: クラスを使った ROS プログラミング
 
-4 章で書いた talker・listener をクラスで書き直します。最初は「なぜクラスで書くのか？」という動機から入ります。
+4 章で書いた talker・listener をクラスで書き直します．最初は「なぜクラスで書くのか？」という動機から入ります．
+
+> クラスの基本（コンストラクタ・メンバ変数・public/private など）は **[付録C: C++ クラス入門](appendix_cpp_class.md)** で詳しく説明しています．クラスに不安がある場合は先に付録Cを読んでください．
 
 ---
 
 ## なぜクラスで書くのか
 
-4 章の talker をもう一度見てみましょう。
+4 章の talker をもう一度見てみましょう．
 
 ```cpp
 // 4章の talker（抜粋）
@@ -20,7 +22,7 @@ void someOtherFunction()
 
 ノードが複雑になると：
 - Publisher・Subscriber・タイマーなど多くのオブジェクトが増える
-- コールバック関数が増えてきたとき、必要なデータをどう渡すか困る
+- コールバック関数が増えてきたとき，必要なデータをどう渡すか困る
 - グローバル変数が増えてコードが追いにくくなる
 
 **クラスを使うと：**
@@ -94,7 +96,7 @@ int main(int argc, char **argv)
 - `count_` もメンバ変数なのでグローバル変数不要
 - `main()` がとてもシンプルになる
 
-> **重要**: `ros::NodeHandle` はメンバ変数として宣言した場合、`ros::init()` が呼ばれた**後**に初期化される必要があります。`main()` で `ros::init()` を呼んでからオブジェクトを生成することで、これが保証されます。
+> **重要**: `ros::NodeHandle` はメンバ変数として宣言した場合，`ros::init()` が呼ばれた**後**に初期化される必要があります．`main()` で `ros::init()` を呼んでからオブジェクトを生成することで，これが保証されます．
 
 ---
 
@@ -170,7 +172,7 @@ sub_ = nh_.subscribe("chatter", 10, &Listener::chatterCallback, this);
 | `&Listener::chatterCallback` | 「Listener クラスの chatterCallback 関数のアドレス」 |
 | `this` | 「今のオブジェクト自身」を渡す（どのオブジェクトのメンバ関数か ROS に教える） |
 
-`this` はクラスの中で使える特別なキーワードで、「自分自身のオブジェクトへのポインタ」です。
+`this` とメンバ関数ポインタ（`&ClassName::function`）の詳細は **[付録C](appendix_cpp_class.md#ros-で登場するクラス関連の構文)** を参照してください．
 
 ---
 
@@ -212,8 +214,8 @@ rosrun ros_tutorial class_listener
 
 ## タイマーを使った書き方（推奨パターン）
 
-`while (ros::ok()) { ... }` のループではなく、**ROS のタイマー機能** を使うとよりスマートに書けます。
-この方法では `ros::spin()` 1 つだけで制御でき、コールバックと同じ仕組みで定期処理ができます。
+`while (ros::ok()) { ... }` のループではなく，**ROS のタイマー機能** を使うとよりスマートに書けます．
+この方法では `ros::spin()` 1 つだけで制御でき，コールバックと同じ仕組みで定期処理ができます．
 
 `~/catkin_ws/src/ros_tutorial/src/timer_talker.cpp` を作成：
 
@@ -281,7 +283,7 @@ target_link_libraries(timer_talker ${catkin_LIBRARIES})
 | コールバックと共存 | やや複雑 | 自然に共存できる |
 | 複数の周期処理 | ループが複雑になる | タイマーを複数作れば OK |
 
-複数の処理を異なる周期で動かしたいとき（例：センサー読み取りは 100Hz、ステータス表示は 1Hz）はタイマー版が特に便利です。
+複数の処理を異なる周期で動かしたいとき（例：センサー読み取りは 100Hz，ステータス表示は 1Hz）はタイマー版が特に便利です．
 
 ```cpp
 // 100Hz でセンサー読み取り
@@ -295,8 +297,8 @@ timer2_ = nh_.createTimer(ros::Duration(1.0),  &MyNode::statusCallback,  this);
 
 ## Publisher と Subscriber を両方持つクラス
 
-実際のノードでは、Publisher と Subscriber を両方持つことが多いです。
-（例：センサーデータを受け取って処理し、結果を送信する）
+実際のノードでは，Publisher と Subscriber を両方持つことが多いです．
+（例：センサーデータを受け取って処理し，結果を送信する）
 
 ```cpp
 #include <ros/ros.h>
@@ -348,7 +350,7 @@ int main(int argc, char **argv)
 }
 ```
 
-このパターン（**受け取って → 処理して → 送る**）は ROS で最もよく使われる構造です。
+このパターン（**受け取って → 処理して → 送る**）は ROS で最もよく使われる構造です．
 
 ---
 
@@ -389,7 +391,7 @@ int main(int argc, char **argv)
 }
 ```
 
-この構造を基本テンプレートとして覚えておくと、どんなノードを書くときも迷いにくくなります。
+この構造を基本テンプレートとして覚えておくと，どんなノードを書くときも迷いにくくなります．
 
 ---
 
@@ -402,24 +404,156 @@ int main(int argc, char **argv)
 | 3 | パッケージ作成・CMakeLists.txt の基本 |
 | 4 | Publisher / Subscriber の実装 |
 | 5 | サービス（リクエスト・レスポンス型通信） |
-| 6 | カスタムメッセージ（.msg / .srv ファイル） |
-| 7 | パラメータの設定と取得 |
-| 8 | launch ファイルによる複数ノードの起動 |
-| 9 | rosbag（トピックの記録・再生） |
-| 10 | C++ クラスの基礎 |
+| 6 | アクション通信（長時間処理・フィードバック・キャンセル） |
+| 7 | カスタムメッセージ（.msg / .srv ファイル） |
+| 8 | パラメータの設定と取得 |
+| 9 | launch ファイルによる複数ノードの起動 |
+| 10 | RViz（データの 3D 可視化） |
+| 11 | rosbag（トピックの記録・再生） |
+| 12 | tf / tf2（座標変換） |
+| 13 | C++ クラスの概要（詳細は付録C） |
+| 14 | ROS ノードのクラス化 |
+
+---
+
+## サービスをクラスで書く
+
+5 章では**グローバル関数**をサービスのコールバックに登録しました．クラスを使うと，サービスサーバーをメンバ変数として持てるため，複数のサービスや Publisher との組み合わせが整理しやすくなります．
+
+`~/catkin_ws/src/ros_tutorial/src/add_two_ints_server_class.cpp` を作成：
+
+```cpp
+#include <ros/ros.h>
+#include <ros_tutorial/AddTwoInts.h>
+
+class AddTwoIntsServer
+{
+public:
+    AddTwoIntsServer()
+    {
+        service_ = nh_.advertiseService("add_two_ints",
+                                         &AddTwoIntsServer::add, this);
+        ROS_INFO("add_two_ints サービスの準備完了");
+    }
+
+    void run() { ros::spin(); }
+
+private:
+    bool add(ros_tutorial::AddTwoInts::Request  &req,
+             ros_tutorial::AddTwoInts::Response &res)
+    {
+        res.sum = req.a + req.b;
+        ROS_INFO("a=%ld, b=%ld → sum=%ld", req.a, req.b, res.sum);
+        return true;
+    }
+
+    ros::NodeHandle    nh_;
+    ros::ServiceServer service_;
+};
+
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "add_two_ints_server");
+    AddTwoIntsServer node;
+    node.run();
+    return 0;
+}
+```
+
+```cmake
+add_executable(add_two_ints_server_class src/add_two_ints_server_class.cpp)
+target_link_libraries(add_two_ints_server_class ${catkin_LIBRARIES})
+add_dependencies(add_two_ints_server_class ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+```
+
+5 章で作ったクライアント（`add_two_ints_client`）はそのまま使えます．
+
+---
+
+## アクションをクラスで書く
+
+6 章では `boost::bind` でコールバックにサーバーのポインタを渡しました．クラスを使うと，サーバーをメンバ変数として保持できるため，コードの見通しが良くなります．
+
+`~/catkin_ws/src/ros_tutorial/src/count_down_server_class.cpp` を作成：
+
+```cpp
+#include <ros/ros.h>
+#include <actionlib/server/simple_action_server.h>
+#include <ros_tutorial/CountDownAction.h>
+
+class CountDownServer
+{
+public:
+    CountDownServer()
+        : server_(nh_, "count_down",
+                  boost::bind(&CountDownServer::executeCallback, this, _1),
+                  false)
+    {
+        server_.start();
+        ROS_INFO("CountDown アクションサーバー準備完了（クラス版）");
+    }
+
+    void run() { ros::spin(); }
+
+private:
+    void executeCallback(const ros_tutorial::CountDownGoalConstPtr &goal)
+    {
+        ros::Rate rate(1.0);
+        ros_tutorial::CountDownFeedback feedback;
+        ros_tutorial::CountDownResult   result;
+
+        ROS_INFO("ゴール受信: target = %d", goal->target);
+
+        for (int i = goal->target; i >= 0; --i)
+        {
+            if (server_.isPreemptRequested() || !ros::ok())
+            {
+                ROS_INFO("キャンセルされました");
+                server_.setPreempted();
+                return;
+            }
+
+            feedback.remaining = i;
+            server_.publishFeedback(feedback);
+            ROS_INFO("残り: %d", i);
+
+            rate.sleep();
+        }
+
+        result.message = "カウントダウン完了！";
+        server_.setSucceeded(result);
+        ROS_INFO("完了");
+    }
+
+    ros::NodeHandle nh_;
+    actionlib::SimpleActionServer<ros_tutorial::CountDownAction> server_;
+};
+
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "count_down_server");
+    CountDownServer server;
+    server.run();
+    return 0;
+}
+```
+
+```cmake
+add_executable(count_down_server_class src/count_down_server_class.cpp)
+target_link_libraries(count_down_server_class ${catkin_LIBRARIES})
+add_dependencies(count_down_server_class ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+```
+
+クライアントは 6 章の `count_down_client` をそのまま使えます．
 
 ---
 
 ## 次のステップ
 
-このチュートリアルを終えたら、以下のトピックに進むとよいでしょう：
+クラスを使ったプログラミングの基礎は以上です．次は実機ロボット（Kobuki）を使った演習に進みます．
 
-- **tf2**：座標変換ライブラリ（ロボットの位置・姿勢管理）
-- **rviz**：3D 可視化ツール
-- **actionlib**：長時間処理のキャンセル可能な非同期通信
+発展的なトピック：
 - **dynamic_reconfigure**：実行中のパラメータ動的変更
-- **ROS2 への移行**：概念は共通、コードの書き方が変わる
+- **ROS2 への移行**：概念は共通，コードの書き方が変わる
 
-お疲れ様でした！
-
-[→ 12章: Kobuki 基礎](12_kobuki_basics.md)
+[→ 15章: Kobuki 基礎](15_kobuki_basics.md)

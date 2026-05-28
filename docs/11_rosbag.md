@@ -1,14 +1,14 @@
-# 9章: rosbag ── トピックの記録と再生
+# 11章: rosbag ── トピックの記録と再生
 
 ## rosbag とは
 
-**rosbag** は、ROS トピックのデータを **ファイルに記録（録画）して後から再生** できるツールです。`.bag` という拡張子のファイルに保存されます。
+**rosbag** は，ROS トピックのデータを **ファイルに記録（録画）して後から再生** できるツールです．`.bag` という拡張子のファイルに保存されます．
 
 ### 何に使うのか
 
 | 用途 | 説明 |
 |------|------|
-| **デバッグ** | 実機でセンサーデータを収録し、PCだけで何度でも再現して解析できる |
+| **デバッグ** | 実機でセンサーデータを収録し，PCだけで何度でも再現して解析できる |
 | **開発効率化** | ロボットがなくても収録済みデータでアルゴリズムを試せる |
 | **記録・比較** | 改良前後の動作データを保存して比較できる |
 | **データセット作成** | 機械学習の学習データとして活用できる |
@@ -33,7 +33,7 @@ rosbag record -O my_data /chatter
 rosbag record --duration=10 -O sensor_10s /odom
 ```
 
-> `Ctrl + C` で記録を終了します。
+> `Ctrl + C` で記録を終了します．
 
 ### rosbag play ── 再生
 
@@ -44,7 +44,7 @@ rosbag play my_data.bag
 # ループ再生（Ctrl+C で終了）
 rosbag play -l my_data.bag
 
-# 再生速度を変える（0.5 = 半速、2.0 = 2倍速）
+# 再生速度を変える（0.5 = 半速，2.0 = 2倍速）
 rosbag play -r 0.5 my_data.bag
 
 # 指定秒数後から再生
@@ -77,7 +77,7 @@ topics:      /chatter   102 msgs @ 10.0 Hz : std_msgs/String
 
 ## 実際に試してみる
 
-talker / listener を使って記録・再生の流れを体験します。
+talker / listener を使って記録・再生の流れを体験します．
 
 ### 手順 1: talker を動かしながら記録する
 
@@ -98,11 +98,11 @@ cd ~/rosbag_data
 rosbag record -O chatter_data /chatter
 ```
 
-10 秒ほど待ってから `Ctrl+C` で記録終了。
+10 秒ほど待ってから `Ctrl+C` で記録終了．
 
 ### 手順 2: talker を止めてバッグファイルを確認する
 
-ターミナル 2 の talker を `Ctrl+C` で終了。
+ターミナル 2 の talker を `Ctrl+C` で終了．
 
 ```bash
 rosbag info ~/rosbag_data/chatter_data.bag
@@ -120,13 +120,13 @@ rosrun ros_tutorial listener
 rosbag play ~/rosbag_data/chatter_data.bag
 ```
 
-listener のターミナルに、記録済みのメッセージが再生されて表示されます。**talker を動かしていなくてもデータが届く** ことを確認してください。
+listener のターミナルに，記録済みのメッセージが再生されて表示されます．**talker を動かしていなくてもデータが届く** ことを確認してください．
 
 ---
 
 ## rosbag と rostopic echo の組み合わせ
 
-再生中に `rostopic echo` でリアルタイム確認できます。
+再生中に `rostopic echo` でリアルタイム確認できます．
 
 ```bash
 # ターミナル A: 再生
@@ -165,7 +165,7 @@ rostopic echo /chatter
 
 ## Kobuki のデータを記録する
 
-実際のロボット開発では、センサーデータを記録して後でゆっくり分析するのがよくある使い方です。
+実際のロボット開発では，センサーデータを記録して後でゆっくり分析するのがよくある使い方です．
 
 ```bash
 # Kobuki の主要なトピックを記録
@@ -175,7 +175,7 @@ rosbag record -O kobuki_session \
   /odom
 ```
 
-記録したデータは、ロボットなしで PC だけで再生・確認できます。
+記録したデータは，ロボットなしで PC だけで再生・確認できます．
 
 ```bash
 # 記録内容を確認
@@ -190,7 +190,7 @@ rostopic echo /mobile_base/events/bumper
 
 ## トピック名を変えて再生する
 
-再生時にトピック名を変更（remap）することもできます。
+再生時にトピック名を変更（remap）することもできます．
 
 ```bash
 # /chatter を /old_chatter として再生
@@ -201,14 +201,14 @@ rosbag play data.bag /chatter:=/old_chatter
 
 ## GUI で確認する（rqt_bag）
 
-インストールされている場合は GUI でバッグファイルを視覚的に確認できます。
+インストールされている場合は GUI でバッグファイルを視覚的に確認できます．
 
 ```bash
 sudo apt install ros-noetic-rqt-bag -y
 rqt_bag ~/rosbag_data/chatter_data.bag
 ```
 
-タイムライン表示でメッセージの分布を確認したり、特定時刻のデータを見たりできます。
+タイムライン表示でメッセージの分布を確認したり，特定時刻のデータを見たりできます．
 
 ---
 
@@ -216,7 +216,7 @@ rqt_bag ~/rosbag_data/chatter_data.bag
 
 ### 再生しても何も届かない
 
-**原因**: listener が `/chatter` を subscribe しているが、rosbag も同じトピックに publish するには roscore が動いている必要があります。
+**原因**: listener が `/chatter` を subscribe しているが，rosbag も同じトピックに publish するには roscore が動いている必要があります．
 
 ```bash
 # 確認
@@ -226,7 +226,7 @@ rostopic list   # ← 再生中は /chatter が見えるはず
 
 ### `--clock` が必要な場合
 
-`ros::Time::now()` を使うコードと rosbag を組み合わせると、時刻のずれが問題になることがあります。その場合は：
+`ros::Time::now()` を使うコードと rosbag を組み合わせると，時刻のずれが問題になることがあります．その場合は：
 
 ```bash
 # rosbag 側
@@ -238,4 +238,4 @@ rosparam set /use_sim_time true
 
 ---
 
-[→ 10章: C++ クラス入門](10_cpp_class_basics.md)
+[→ 12章: tf / tf2](12_tf.md)
