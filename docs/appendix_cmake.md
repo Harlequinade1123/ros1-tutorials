@@ -127,6 +127,9 @@ cmake_example/
 # → Hello, CMake!
 ```
 
+`./` は「現在のディレクトリにある実行ファイル」を明示する書き方です．  
+Linux ではセキュリティ上の慣習として，カレントディレクトリが実行ファイルの検索パス（`PATH`）に含まれていません．そのため `hello` だけでは「どこにある hello か」がわからず，`./hello` と場所を明示する必要があります．
+
 ### ファイルが複数ある場合
 
 `add_executable` にソースファイルを並べるだけです：
@@ -141,12 +144,15 @@ add_executable(my_program
 
 ### 外部ライブラリを使う場合
 
-たとえば数学ライブラリ（`libm`）を使いたい場合：
+たとえば数学ライブラリ（`sin`, `cos` などが入っている `libm`）を使いたい場合：
 
 ```cmake
 add_executable(my_program main.cpp)
-target_link_libraries(my_program m)    # -lm に相当
+target_link_libraries(my_program m)    # "m" = 数学ライブラリ（libm）を結合する
 ```
+
+`target_link_libraries` は「この実行ファイルを作るとき，このライブラリも一緒に結合してください」という命令です．  
+ライブラリ名は `lib` と拡張子を除いた部分を書きます（`libm.so` → `m`，`libopencv_core.so` → `opencv_core`）．
 
 ---
 
@@ -225,11 +231,18 @@ catkin では **このパッケージが何に依存しているか** を `packa
 
 ```xml
 <!-- package.xml の依存宣言（抜粋） -->
-<build_depend>roscpp</build_depend>
-<exec_depend>roscpp</exec_depend>
+<build_depend>roscpp</build_depend>   <!-- コンパイル時に必要 -->
+<exec_depend>roscpp</exec_depend>     <!-- 実行時に必要 -->
 ```
 
-CMakeLists.txt の `find_package` と package.xml の `<depend>` は**必ずセットで書く**必要があります．片方だけ書いても動かない場合があります．
+| タグ | 意味 |
+|------|------|
+| `<build_depend>` | コンパイル時に必要なパッケージ（ヘッダファイルをインクルードする場合など） |
+| `<exec_depend>` | 実行時に必要なパッケージ（共有ライブラリをリンクする場合など） |
+
+`roscpp` のように両方で使うパッケージには，`<depend>roscpp</depend>` と1行で書く方法もあります（`build_depend` と `exec_depend` を兼ねます）．
+
+CMakeLists.txt の `find_package` と package.xml の依存宣言は**必ずセットで書く**必要があります．片方だけ書いても動かない場合があります．
 
 ### `find_package` とは
 
@@ -238,6 +251,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs)
 ```
 
 「`roscpp` と `std_msgs` というパッケージを探して，そのヘッダファイルやライブラリの場所を `${catkin_INCLUDE_DIRS}` と `${catkin_LIBRARIES}` という変数に入れてください」という命令です．
+
+`${変数名}` は CMake の変数展開の記法です．C++ の変数と同様に，`${catkin_INCLUDE_DIRS}` と書くとその変数に格納されたパス一覧に置き換えられます．
 
 通常の CMake で外部ライブラリを使う場合も `find_package` を使います（例: `find_package(OpenCV REQUIRED)`）．ROS 特有の機能ではありません．
 
