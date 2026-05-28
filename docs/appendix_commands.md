@@ -1,6 +1,6 @@
 # 付録: コマンドリファレンス
 
-開発中によく使うコマンドをまとめた早見表です。詳細は各章を参照してください。
+開発中によく使うコマンドをまとめた早見表です．詳細は各章を参照してください．
 
 ---
 
@@ -214,7 +214,7 @@ rosparam load backup.yaml
 
 ### ビルド・パッケージ作成（catkin）
 
-`catkin build` や `catkin create` は `python3-catkin-tools` パッケージが提供するコマンドです（2章のインストール手順で導入済み）。
+`catkin build` や `catkin create` は `python3-catkin-tools` パッケージが提供するコマンドです（2章のインストール手順で導入済み）．
 
 | コマンド | 説明 |
 |---------|------|
@@ -237,11 +237,11 @@ cd ~/catkin_ws/src
 catkin create pkg my_pkg --catkin-deps roscpp std_msgs
 ```
 
-> ビルド後は必ず `source ~/catkin_ws/devel/setup.bash` を実行するか、ターミナルを開き直してください。
+> ビルド後は必ず `source ~/catkin_ws/devel/setup.bash` を実行するか，ターミナルを開き直してください．
 
 #### 旧コマンド（catkin_make / catkin_create_pkg）
 
-`catkin_tools` が普及する前から使われている旧来のコマンドです。ネット上のサンプルで見かけることがあります。
+`catkin_tools` が普及する前から使われている旧来のコマンドです．ネット上のサンプルで見かけることがあります．
 
 | 旧コマンド | 新コマンド | 説明 |
 |-----------|-----------|------|
@@ -249,7 +249,7 @@ catkin create pkg my_pkg --catkin-deps roscpp std_msgs
 | `catkin_make --pkg <名前>` | `catkin build <名前>` | 特定パッケージのみビルド |
 | `catkin_create_pkg <名前> [依存...]` | `catkin create pkg <名前> --catkin-deps [依存...]` | パッケージ作成 |
 
-`catkin_make` と `catkin build` は**同一ワークスペース内で混在させると壊れます**。このチュートリアルでは一貫して `catkin build` を使ってください。
+`catkin_make` と `catkin build` は**同一ワークスペース内で混在させると壊れます**．このチュートリアルでは一貫して `catkin build` を使ってください．
 
 ### パッケージ検索・移動（rospack・roscd・rosls）
 
@@ -329,4 +329,4 @@ cd ~/catkin_ws && catkin build && source devel/setup.bash && rosrun ros_tutorial
 | `ROS_PACKAGE_PATH` | パッケージの検索パス | `echo $ROS_PACKAGE_PATH` |
 | `ROS_DISTRO` | 現在の ROS ディストリビューション | `echo $ROS_DISTRO` |
 
-> 複数の PC で ROS を使う場合（分散システム）は `ROS_MASTER_URI` と `ROS_IP` を適切に設定する必要があります。
+> 複数の PC で ROS を使う場合（分散システム）は `ROS_MASTER_URI` と `ROS_IP` を適切に設定する必要があります．
