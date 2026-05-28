@@ -2,8 +2,8 @@
 
 ## パッケージとは
 
-ROS では、ひとまとまりのプログラムを **パッケージ** という単位で管理します。  
-Visual Studio のプロジェクトに相当するものだと思ってください。
+ROS では，ひとまとまりのプログラムを **パッケージ** という単位で管理します．  
+Visual Studio のプロジェクトに相当するものだと思ってください．
 
 パッケージには以下が含まれます：
 
@@ -35,13 +35,13 @@ catkin create pkg ros_tutorial --catkin-deps roscpp std_msgs
   - `roscpp`：C++ で ROS を使うために必要
   - `std_msgs`：標準的なメッセージ型（文字列・数値など）を使うために必要
 
-> **旧コマンドについて**: `catkin_create_pkg` という古いコマンドも同じ機能を持ちます。
+> **旧コマンドについて**: `catkin_create_pkg` という古いコマンドも同じ機能を持ちます．
 > ```bash
 > catkin_create_pkg ros_tutorial roscpp std_msgs
 > ```
-> `catkin_create_pkg` は `catkin` コアパッケージに含まれており、依存パッケージをフラグなしで並べて指定します。`catkin create pkg` は `catkin_tools` が提供する新しい書き方です。どちらも生成されるファイルは同じです。
+> `catkin_create_pkg` は `catkin` コアパッケージに含まれており，依存パッケージをフラグなしで並べて指定します．`catkin create pkg` は `catkin_tools` が提供する新しい書き方です．どちらも生成されるファイルは同じです．
 
-実行すると `src/ros_tutorial/` フォルダが作成されます。
+実行すると `src/ros_tutorial/` フォルダが作成されます．
 
 ```
 ~/catkin_ws/src/ros_tutorial/
@@ -56,11 +56,11 @@ catkin create pkg ros_tutorial --catkin-deps roscpp std_msgs
 
 ### CMakeLists.txt
 
-**「どのファイルをどうビルドするか」** を記述するファイルです。
+**「どのファイルをどうビルドするか」** を記述するファイルです．
 
-Visual Studio では GUI でプロジェクト設定をしていましたが、ROS ではこのテキストファイルに書きます。
+Visual Studio では GUI でプロジェクト設定をしていましたが，ROS ではこのテキストファイルに書きます．
 
-最初は難しく見えますが、実際に変更するのは限られた箇所だけです。
+最初は難しく見えますが，実際に変更するのは限られた箇所だけです．
 
 デフォルトで生成された内容を確認してみましょう（長いのでコメント行 `#` は省略して重要な部分を示します）：
 
@@ -85,7 +85,7 @@ include_directories(
 
 ### package.xml
 
-**パッケージのメタ情報（名前・バージョン・依存関係など）** を記述するファイルです。
+**パッケージのメタ情報（名前・バージョン・依存関係など）** を記述するファイルです．
 
 ```xml
 <?xml version="1.0"?>
@@ -108,7 +108,7 @@ include_directories(
 </package>
 ```
 
-> **今は内容を全部理解しなくて大丈夫です。** 新しい機能を使うたびに、変更が必要な箇所だけを説明します。
+> **今は内容を全部理解しなくて大丈夫です．** 新しい機能を使うたびに，変更が必要な箇所だけを説明します．
 
 ---
 
@@ -119,13 +119,13 @@ cd ~/catkin_ws
 catkin build
 ```
 
-エラーなく完了すれば成功です。今はまだソースファイルが何もないので、これだけです。
+エラーなく完了すれば成功です．今はまだソースファイルが何もないので，これだけです．
 
 ---
 
 ## 試しにソースファイルを置いてみる
 
-動作確認のために、簡単な C++ ファイルを作ってビルドしてみましょう。
+動作確認のために，簡単な C++ ファイルを作ってビルドしてみましょう．
 
 ### ソースファイルの作成
 
@@ -149,11 +149,11 @@ int main(int argc, char **argv)
 }
 ```
 
-**`ROS_INFO`** は ROS 用のログ出力関数です。`printf` や `std::cout` の代わりに使います。タイムスタンプやノード名も自動でつきます。
+**`ROS_INFO`** は ROS 用のログ出力関数です．`printf` や `std::cout` の代わりに使います．タイムスタンプやノード名も自動でつきます．
 
 ### CMakeLists.txt に実行ファイルの設定を追加
 
-`~/catkin_ws/src/ros_tutorial/CMakeLists.txt` を開き、末尾に以下を追加します：
+`~/catkin_ws/src/ros_tutorial/CMakeLists.txt` を開き，末尾に以下を追加します：
 
 ```bash
 nano ~/catkin_ws/src/ros_tutorial/CMakeLists.txt
@@ -179,7 +179,7 @@ catkin build
 
 ### 実行
 
-ターミナルを **2 つ** 使います。
+ターミナルを **2 つ** 使います．
 
 **ターミナル 1（roscore の起動）：**
 ```bash
@@ -196,13 +196,13 @@ rosrun ros_tutorial hello_node
 [ INFO] [1234567890.123]: Hello, ROS!
 ```
 
-`rosrun <パッケージ名> <ノード名>` でノードを起動します。
+`rosrun <パッケージ名> <ノード名>` でノードを起動します．
 
 ---
 
 ## まとめ
 
-パッケージを作る基本的な流れをまとめます。
+パッケージを作る基本的な流れをまとめます．
 
 ```
 1. catkin create pkg でパッケージ作成
@@ -212,7 +212,7 @@ rosrun ros_tutorial hello_node
 5. rosrun で実行
 ```
 
-この流れは以降の章でも同じです。
+この流れは以降の章でも同じです．
 
 ---
 
