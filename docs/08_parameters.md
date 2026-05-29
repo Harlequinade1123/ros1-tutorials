@@ -92,6 +92,12 @@ target_link_libraries(param_example ${catkin_LIBRARIES})
 
 ## launch ファイルでパラメータを設定する
 
+`launch/` ディレクトリがなければ作成します：
+
+```bash
+mkdir -p ~/catkin_ws/src/ros_tutorial/launch
+```
+
 `~/catkin_ws/src/ros_tutorial/launch/param_example.launch` を作成：
 
 ```xml
@@ -203,6 +209,8 @@ launch ファイルから読み込む：
   </node>
 </launch>
 ```
+
+`$(find パッケージ名)` は launch ファイル内でパッケージのインストールパスを取得する記法です（例：`$(find ros_tutorial)` → `~/catkin_ws/src/ros_tutorial`）．パスをハードコードせずに済むため，環境が変わっても動作します（詳しくは 9章）．
 
 ---
 

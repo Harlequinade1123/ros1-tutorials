@@ -82,6 +82,8 @@ generate_messages(
 )
 ```
 
+`add_message_files` は `.msg` ファイル用です（`.srv` の場合は `add_service_files`，`.action` の場合は `add_action_files` を使います）．各設定の意味は [5章](05_service.md) の「追加した設定の意味」の表を参照してください．
+
 #### 3. `catkin_package` に `message_runtime` を追加
 
 変更前：
@@ -247,12 +249,19 @@ project(ros_tutorial)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  actionlib
+  actionlib_msgs
   message_generation
 )
 
 add_service_files(
   FILES
   AddTwoInts.srv
+)
+
+add_action_files(
+  FILES
+  CountDown.action
 )
 
 add_message_files(
@@ -263,10 +272,11 @@ add_message_files(
 generate_messages(
   DEPENDENCIES
   std_msgs
+  actionlib_msgs
 )
 
 catkin_package(
-  CATKIN_DEPENDS roscpp std_msgs message_runtime
+  CATKIN_DEPENDS roscpp std_msgs actionlib actionlib_msgs message_runtime
 )
 
 include_directories(
@@ -295,6 +305,14 @@ add_dependencies(add_two_ints_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catki
 add_executable(add_two_ints_client src/add_two_ints_client.cpp)
 target_link_libraries(add_two_ints_client ${catkin_LIBRARIES})
 add_dependencies(add_two_ints_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(count_down_server src/count_down_server.cpp)
+target_link_libraries(count_down_server ${catkin_LIBRARIES})
+add_dependencies(count_down_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(count_down_client src/count_down_client.cpp)
+target_link_libraries(count_down_client ${catkin_LIBRARIES})
+add_dependencies(count_down_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 add_executable(sensor_publisher src/sensor_publisher.cpp)
 target_link_libraries(sensor_publisher ${catkin_LIBRARIES})
