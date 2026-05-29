@@ -168,7 +168,7 @@ target_link_libraries(hello_node ${catkin_LIBRARIES})
 
 **意味：**
 - `add_executable(hello_node src/hello.cpp)` → `src/hello.cpp` をコンパイルして `hello_node` という実行ファイルを作る
-- `target_link_libraries(...)` → ROS のライブラリをリンクする（おまじないと思っておいてよい）
+- `target_link_libraries(hello_node ${catkin_LIBRARIES})` → `find_package` で見つけた ROS のライブラリ（`roscpp` など）を実行ファイルに結合する．`${catkin_LIBRARIES}` は catkin が自動で設定する変数（[付録: CMake](appendix_cmake.md) 参照）
 
 ### ビルド
 
