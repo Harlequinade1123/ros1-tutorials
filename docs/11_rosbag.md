@@ -163,27 +163,23 @@ rostopic echo /chatter
 
 ---
 
-## Kobuki のデータを記録する
+## 実際のロボット開発での活用
 
-実際のロボット開発では，センサーデータを記録して後でゆっくり分析するのがよくある使い方です．
+センサーデータを記録しておき，後でロボットなしに再生・分析するのがよくある使い方です．  
+特定のトピックだけを指定して記録することもできます：
 
 ```bash
-# Kobuki の主要なトピックを記録
-rosbag record -O kobuki_session \
-  /mobile_base/events/bumper \
-  /mobile_base/events/cliff \
+# 指定したトピックだけを記録（-O でファイル名を指定）
+rosbag record -O my_session \
+  /chatter \
   /odom
-```
 
-記録したデータは，ロボットなしで PC だけで再生・確認できます．
-
-```bash
 # 記録内容を確認
-rosbag info kobuki_session.bag
+rosbag info my_session.bag
 
-# 再生して rostopic echo で確認
-rosbag play kobuki_session.bag &
-rostopic echo /mobile_base/events/bumper
+# 再生して確認（& でバックグラウンド実行し，同じターミナルで続けて操作できるようにする）
+rosbag play my_session.bag &
+rostopic echo /chatter
 ```
 
 ---
