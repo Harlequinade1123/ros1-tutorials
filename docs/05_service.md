@@ -110,6 +110,19 @@ catkin_package(
 
 > **メモ**: `.msg` ファイルでカスタムメッセージを定義するときも同じ設定が必要です（詳しくは 7章）．
 
+### 追加した設定の意味
+
+`.srv` ファイルから C++ コードを生成するために，以下の4つの項目を追加しています：
+
+| 項目 | タイミング | 役割 |
+|------|-----------|------|
+| `message_generation`（`find_package`） | コンパイル時 | `.srv` / `.msg` から C++ ヘッダを自動生成するツール |
+| `add_service_files` | コンパイル時 | このパッケージのどの `.srv` ファイルを処理するかを宣言する |
+| `generate_messages` | コンパイル時 | 宣言したファイルから実際に C++ ヘッダを生成する |
+| `message_runtime`（`catkin_package` / `exec_depend`） | 実行時 | 生成されたメッセージ型を実行時に使えるようにする |
+
+`message_generation` はビルド中だけ必要なので `build_depend`，`message_runtime` は実行時も必要なので `exec_depend` に書きます．
+
 ---
 
 ## サービスサーバーを実装する
@@ -135,6 +148,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "add_two_ints_server");
     ros::NodeHandle nh;
 
+    // サービスを公開する．この変数が生きている間だけサービスが有効
     ros::ServiceServer service = nh.advertiseService("add_two_ints", add);
     ROS_INFO("add_two_ints サービスの準備完了");
 
@@ -147,10 +161,20 @@ int main(int argc, char **argv)
 
 | コード | 意味 |
 |--------|------|
-| `nh.advertiseService("add_two_ints", add)` | サービスを公開（`nh.advertise` のサービス版）|
-| コールバック引数 `Request &req` | クライアントから受け取った値 |
-| コールバック引数 `Response &res` | クライアントに返す値（ここに書き込む）|
-| `return true` | サービス成功を示す |
+| `nh.advertiseService("add_two_ints", add)` | サービスを公開し，リクエストが来たら `add` を呼ぶよう登録する |
+| `ros::ServiceServer service = ...` | 戻り値を変数に保持する必要がある．変数がスコープを抜けるとサービスが自動的に閉じる |
+| コールバック引数 `Request &req` | クライアントから受け取った値（`.srv` の `---` より上のフィールド） |
+| コールバック引数 `Response &res` | クライアントに返す値（`.srv` の `---` より下のフィールドをここに書き込む）|
+| `return true` / `false` | サービス成功 / 失敗を示す．`false` を返すとクライアント側の `call()` も `false` を返す |
+
+### コールバック引数と .srv の対応
+
+`.srv` ファイルの構造がそのままコールバック引数に対応しています：
+
+- `---` より上のフィールド（`a`, `b`）→ `req.a`, `req.b` から読む
+- `---` より下のフィールド（`sum`）→ `res.sum` に書き込む
+
+Subscriber のコールバックは `void` を返しますが，サービスのコールバックは `bool` を返して**成否をクライアントに伝える**点が異なります．
 
 ---
 
@@ -179,14 +203,15 @@ int main(int argc, char **argv)
     ros::ServiceClient client =
         nh.serviceClient<ros_tutorial::AddTwoInts>("add_two_ints");
 
-    // リクエストを組み立てて送信
+    // リクエストとレスポンスを1つにまとめたオブジェクト
     ros_tutorial::AddTwoInts srv;
-    srv.request.a = std::atoll(argv[1]);
+    srv.request.a = std::atoll(argv[1]);   // リクエストに値をセット
     srv.request.b = std::atoll(argv[2]);
 
+    // call() はブロッキング：レスポンスが返るまでこの行で止まる
     if (client.call(srv))
     {
-        ROS_INFO("結果: %ld", srv.response.sum);
+        ROS_INFO("結果: %ld", srv.response.sum);   // call() の後に response を読む
     }
     else
     {
@@ -202,16 +227,30 @@ int main(int argc, char **argv)
 
 | コード | 意味 |
 |--------|------|
-| `nh.serviceClient<型>("名前")` | サービスクライアントを作る（`nh.subscribe` のサービス版）|
-| `client.call(srv)` | サービスを呼び出す（**同期**：レスポンスが返るまでブロック）|
-| `srv.request.a = ...` | リクエストに値をセット |
-| `srv.response.sum` | レスポンスの値を読む |
+| `nh.serviceClient<型>("名前")` | サービスクライアントを作る |
+| `ros_tutorial::AddTwoInts srv` | リクエストとレスポンスを1つにまとめたオブジェクト．`srv.request` に値を入れ，`call()` 後に `srv.response` を読む |
+| `srv.request.a = ...` | リクエストに値をセット（`call()` の前に行う）|
+| `client.call(srv)` | サービスを呼び出す．完了したら `true`，サーバーが見つからない・失敗したら `false` を返す |
+| `srv.response.sum` | レスポンスの値を読む（`call()` が `true` を返した後に有効）|
+
+### `call()` はブロッキング
+
+`client.call(srv)` を呼ぶと，サーバーがレスポンスを返すまでその行でプログラムが止まります．  
+これが「同期通信」の意味です．即座に結果が返るサービスには問題ありませんが，**処理に時間がかかるサービスを呼ぶと，その間はほかの処理が一切できなくなります．**  
+移動命令のような長時間処理にはアクション通信を使う理由がここにあります（[6章](06_actionlib.md)）．
 
 ---
 
 ## CMakeLists.txt に実行ファイルの設定を追加
 
 `.srv` からヘッダファイルが自動生成されるため，そのヘッダを使うソースのコンパイル前に生成が完了するよう `add_dependencies` で順序を指定します．
+
+| 引数 | 意味 |
+|------|------|
+| `${${PROJECT_NAME}_EXPORTED_TARGETS}` | このパッケージが `generate_messages` で生成するヘッダへの依存 |
+| `${catkin_EXPORTED_TARGETS}` | `roscpp` など依存パッケージが生成するターゲットへの依存 |
+
+カスタムメッセージ・サービス・アクションを**使わない**ノードには `add_dependencies` は不要です．
 
 ```cmake
 add_executable(add_two_ints_server src/add_two_ints_server.cpp)
@@ -315,4 +354,4 @@ rossrv show ros_tutorial/AddTwoInts
 
 ---
 
-[→ 7章: カスタムメッセージ](07_custom_messages.md)
+[→ 6章: アクション通信](06_actionlib.md)
