@@ -264,12 +264,11 @@ int main(int argc, char **argv)
 
 **動作フロー：**
 
-```
-      バンパー接触
-MOVING ──────────→ BACKING_UP ──(1秒後)──→ MOVING
-  ↑                                           │
-  └───────────────────────────────────────────┘
-        （繰り返す）
+```mermaid
+stateDiagram-v2
+    [*] --> MOVING
+    MOVING --> BACKING_UP : バンパー接触
+    BACKING_UP --> MOVING : 1秒後（繰り返す）
 ```
 
 ### ヒント
