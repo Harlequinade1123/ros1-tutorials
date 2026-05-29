@@ -17,8 +17,9 @@
 sequenceDiagram
     participant C as Client
     participant S as Server
-    Note over C,S: 【サービス】ブロック：完了まで待つ
+    Note over C,S: 【サービス】完了まで待つ（ブロック）
     C->>S: Request
+    Note over C: 完了まで待機
     S->>C: Response
 ```
 
@@ -27,12 +28,16 @@ sequenceDiagram
     participant C as Client
     participant S as Server
     Note over C,S: 【アクション】非同期・進捗通知あり
-    C->>S: Goal
+    C->>S: Goal（目標）
     loop 処理中（何度も）
         S-->>C: Feedback（進捗）
     end
-    S->>C: Result（完了結果）
-    C-->>S: Cancel（途中中断も可）
+    alt 正常完了
+        S->>C: Result（完了結果）
+    else キャンセル（処理中に送信可能）
+        C->>S: Cancel
+        S->>C: Preempted（中断通知）
+    end
 ```
 
 ---
