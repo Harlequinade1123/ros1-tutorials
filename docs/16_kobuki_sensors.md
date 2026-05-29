@@ -274,7 +274,8 @@ MOVING ──────────→ BACKING_UP ──(1秒後)──→ MOV
 
 ### ヒント
 
-- 状態を `enum State { MOVING, BACKING_UP };` で定義する
+- 状態を `enum State { MOVING, BACKING_UP };` で定義する  
+  （`enum` は「名前付き定数のセット」を定義する C++ の機能です．`state == MOVING` のように使えます）
 - 「後退」は `linear.x = -0.1`
 - 後退時間は 1.0 秒（約 0.1 m）で十分
 - バンパーコールバックは **MOVING 状態のときだけ** 状態を変える（二重反応を防ぐ）

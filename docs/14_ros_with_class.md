@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 - `count_` もメンバ変数なのでグローバル変数不要
 - `main()` がとてもシンプルになる
 
-> **重要**: `ros::NodeHandle` はメンバ変数として宣言した場合，`ros::init()` が呼ばれた**後**に初期化される必要があります．`main()` で `ros::init()` を呼んでからオブジェクトを生成することで，これが保証されます．
+> **重要**: `ros::NodeHandle` はメンバ変数として宣言した場合，`ros::init()` が呼ばれた**後**に初期化される必要があります．`ros::init()` は ROS マスターへの接続など内部通信の初期化を行うため，それより前に `NodeHandle` を生成しようとするとエラーになります．`main()` で `ros::init()` を呼んでからオブジェクトを生成することで，これが保証されます．
 
 ---
 
@@ -243,6 +243,7 @@ public:
 
 private:
     // タイマーが発火するたびに呼ばれる
+    // event には発火時刻・前回発火時刻などが入っているが，通常は使わなくてよい
     void timerCallback(const ros::TimerEvent& event)
     {
         std_msgs::String msg;
@@ -405,7 +406,7 @@ int main(int argc, char **argv)
 | 4 | Publisher / Subscriber の実装 |
 | 5 | サービス（リクエスト・レスポンス型通信） |
 | 6 | アクション通信（長時間処理・フィードバック・キャンセル） |
-| 7 | カスタムメッセージ（.msg / .srv ファイル） |
+| 7 | カスタムメッセージ（.msg ファイルの定義） |
 | 8 | パラメータの設定と取得 |
 | 9 | launch ファイルによる複数ノードの起動 |
 | 10 | RViz（データの 3D 可視化） |
@@ -480,6 +481,7 @@ add_dependencies(add_two_ints_server_class ${${PROJECT_NAME}_EXPORTED_TARGETS} $
 #include <ros/ros.h>
 #include <actionlib/server/simple_action_server.h>
 #include <ros_tutorial/CountDownAction.h>
+#include <boost/bind.hpp>
 
 class CountDownServer
 {
@@ -543,6 +545,17 @@ add_executable(count_down_server_class src/count_down_server_class.cpp)
 target_link_libraries(count_down_server_class ${catkin_LIBRARIES})
 add_dependencies(count_down_server_class ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 ```
+
+### `boost::bind` の書き方の変化
+
+6 章（自由関数版）と今回（メンバ関数版）では，`boost::bind` の引数順が異なります．
+
+| | 書き方 | 理由 |
+|-|--------|------|
+| 6章（自由関数） | `boost::bind(&executeCallback, _1, &server)` | `_1` がゴール，`&server` を追加引数として固定 |
+| 14章（メンバ関数） | `boost::bind(&CountDownServer::executeCallback, this, _1)` | メンバ関数はオブジェクト（`this`）を関数ポインタの直後に指定する必要がある |
+
+メンバ関数は「どのオブジェクトに対して呼ぶか」が必要なため，`this` を関数ポインタの直後に置きます．また，コールバックが引数1つ（ゴールのみ）になったのは，サーバーをメンバ変数（`server_`）として保持しているため，ポインタを引数で渡す必要がなくなったためです．
 
 クライアントは 6 章の `count_down_client` をそのまま使えます．
 

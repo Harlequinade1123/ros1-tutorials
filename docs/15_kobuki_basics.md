@@ -90,7 +90,8 @@ int main(int argc, char **argv)
     ros::Publisher cmd_pub =
         nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 10);
 
-    // Publisher がサブスクライバーと接続されるまで待つ
+    // ros::Duration(秒) で時間長オブジェクトを作り，.sleep() でその時間だけ待機する
+    // Publisher がサブスクライバーと接続されるまで 1 秒待つ（接続前に publish すると届かない）
     ros::Duration(1.0).sleep();
 
     geometry_msgs::Twist cmd;
@@ -101,6 +102,8 @@ int main(int argc, char **argv)
 
     while (ros::ok())
     {
+        // ros::Time 同士の引き算 → ros::Duration（時間の長さ）
+        // .toSec() で double 型の秒数に変換する
         double elapsed = (ros::Time::now() - start).toSec();
 
         if (elapsed < 1.0)
@@ -122,6 +125,24 @@ int main(int argc, char **argv)
 
     return 0;
 }
+```
+
+### 時間計測のパターン
+
+この章では **経過時間** の計測に以下のパターンを使います：
+
+```cpp
+ros::Time start = ros::Time::now();   // 開始時刻を記録
+
+double elapsed = (ros::Time::now() - start).toSec();
+//               ↑                          ↑
+//  2つの ros::Time の差 = ros::Duration    double 型の秒数に変換
+```
+
+`ros::Duration(秒).sleep()` は指定した秒数だけ待機します：
+
+```cpp
+ros::Duration(1.0).sleep();   // 1 秒待機
 ```
 
 ### CMakeLists.txt に追加

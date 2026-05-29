@@ -106,6 +106,7 @@ private:
         }
     }
 
+    // 引数名を省略（使わない引数に名前をつけると「未使用変数」警告が出るため，名前なしにするのが慣習）
     void timerCallback(const ros::TimerEvent&)
     {
         geometry_msgs::Twist cmd;
