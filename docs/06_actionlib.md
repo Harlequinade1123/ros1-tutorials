@@ -75,6 +75,12 @@ find_package(catkin REQUIRED COMPONENTS
 )
 ```
 
+| 追加パッケージ | 役割 |
+|--------------|------|
+| `actionlib` | Action Server / Client を実装するためのパッケージ |
+| `actionlib_msgs` | Goal・Feedback・Result などアクション通信共通のメッセージ型 |
+| `message_generation` | `.action` ファイルから C++ ヘッダを自動生成するツール（5章と同様）|
+
 #### `add_action_files` と `generate_messages` を追加（`catkin_package()` の前）
 
 ```cmake
@@ -117,6 +123,7 @@ catkin_package(
 #include <ros_tutorial/CountDownAction.h>
 #include <boost/bind.hpp>
 
+// 型名が長いので Server という別名をつける（typedef = 型の別名定義）
 typedef actionlib::SimpleActionServer<ros_tutorial::CountDownAction> Server;
 
 void executeCallback(const ros_tutorial::CountDownGoalConstPtr &goal,
@@ -154,10 +161,10 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "count_down_server");
     ros::NodeHandle nh;
 
-    // boost::bind でコールバックにサーバー自身のポインタを渡す
+    // false = 自動起動しない．次行の server.start() で明示的に起動する
     Server server(nh, "count_down",
                   boost::bind(&executeCallback, _1, &server), false);
-    server.start();
+    server.start();   // ゴールの受け付けを開始する
     ROS_INFO("CountDown アクションサーバー準備完了");
 
     ros::spin();
@@ -169,11 +176,20 @@ int main(int argc, char **argv)
 
 | コード | 意味 |
 |--------|------|
-| `boost::bind(&f, _1, &server)` | `f(goal, &server)` として呼ばれる関数を作る．`_1` はサーバーが自動で埋めるゴールの受け取り場所 |
-| `server->isPreemptRequested()` | キャンセルリクエストが届いているか確認 |
+| `typedef ... Server` | 長い型名に `Server` という別名をつける |
+| `Server server(nh, "count_down", ..., false)` | `false` は「自動起動しない」．次行の `server.start()` で明示的に起動する |
+| `server.start()` | ゴールの受け付けを開始する |
+| `boost::bind(&executeCallback, _1, &server)` | `executeCallback(goal, &server)` の形で呼ぶ関数を作る．`_1` はゴール（サーバーが自動で渡す）の受け取り場所 |
+| `server->isPreemptRequested()` | クライアントからキャンセルリクエストが届いているか確認 |
 | `server->publishFeedback(fb)` | 処理中に進捗をクライアントへ送る |
-| `server->setSucceeded(result)` | 処理完了・結果を返す |
-| `server->setPreempted()` | キャンセルとして処理を終了 |
+| `server->setSucceeded(result)` | 処理を成功として完了し，結果をクライアントに返す |
+| `server->setPreempted()` | キャンセルリクエストを受け入れ，処理を中断する |
+
+### `boost::bind` について
+
+`SimpleActionServer` はゴールが届くと `executeCallback(goal)` の形（引数1つ）でコールバックを呼ぼうとします．  
+しかし今回のコールバックは `executeCallback(goal, server)` と引数が2つあるため，そのままでは渡せません．  
+`boost::bind(&executeCallback, _1, &server)` は「第1引数（`_1`）はサーバーが渡すゴール，第2引数は `&server` を固定して使う」という新しい関数を作る命令です．
 
 ---
 
@@ -196,26 +212,29 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "count_down_client");
 
+    // true = 内部でスピンスレッドを自動起動（サーバー側の ros::spin() に相当）
     actionlib::SimpleActionClient<ros_tutorial::CountDownAction>
         client("count_down", true);
 
     ROS_INFO("サーバーの起動を待機中...");
-    client.waitForServer();
+    client.waitForServer();   // サーバーが準備完了するまでブロック
 
     ros_tutorial::CountDownGoal goal;
     goal.target = 5;
 
     ROS_INFO("ゴール送信: target = %d", goal.target);
+    // sendGoal の引数順：ゴール，完了CB，アクティブCB，フィードバックCB
     client.sendGoal(goal,
-                    NULL,
-                    NULL,
-                    boost::bind(feedbackCallback, _1));
+                    NULL,    // 完了コールバック（使わないので NULL）
+                    NULL,    // アクティブコールバック（使わないので NULL）
+                    boost::bind(feedbackCallback, _1));   // フィードバックコールバック
 
+    // 最大 30 秒間，完了を待つ．タイムアウトすると false が返る
     bool finished = client.waitForResult(ros::Duration(30.0));
 
     if (finished)
     {
-        ROS_INFO("状態: %s", client.getState().toString().c_str());
+        ROS_INFO("状態: %s", client.getState().toString().c_str());   // SUCCEEDED など
         ROS_INFO("結果: %s", client.getResult()->message.c_str());
     }
     else
@@ -227,6 +246,18 @@ int main(int argc, char **argv)
     return 0;
 }
 ```
+
+### コードのポイント
+
+| コード | 意味 |
+|--------|------|
+| `SimpleActionClient<型>("名前", true)` | クライアントを作る．`true` は「スピンスレッドを自動起動」（`ros::spin()` の呼び出しが不要になる）|
+| `client.waitForServer()` | サーバーが起動するまでブロック（サーバーを先に `rosrun` しておく）|
+| `client.sendGoal(goal, done_cb, active_cb, feedback_cb)` | ゴールを送信する．第2〜4引数はコールバック関数（不要な場合は `NULL`）|
+| `client.waitForResult(ros::Duration(秒))` | 指定した秒数まで結果を待つ．完了したら `true`，タイムアウトなら `false` |
+| `client.getState()` | 完了後の状態を取得（`SUCCEEDED`，`ABORTED`，`PREEMPTED` など）|
+| `client.getResult()` | 完了後の結果（`CountDownResult` 型）を取得 |
+| `client.cancelGoal()` | 進行中のゴールをキャンセルする |
 
 ---
 
