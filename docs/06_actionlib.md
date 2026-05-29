@@ -13,16 +13,26 @@
 | キャンセル | なし | なし | あり |
 | 主な用途 | センサーデータ配信 | 一時的な設定変更 | 移動・把持など長時間処理 |
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    Note over C,S: 【サービス】ブロック：完了まで待つ
+    C->>S: Request
+    S->>C: Response
 ```
-【サービス】
-Client ──(Request)──→ Server
-Client ←─(Response)── Server（ブロック：完了まで待つ）
 
-【アクション】
-Client ──(Goal)──────────────────→ Server
-Client ←──(Feedback: 進捗)──────── Server（処理中，何度も）
-Client ←──(Result: 完了結果)──────  Server（処理完了時）
-Client ──(Cancel)────────────────→ Server（途中中断）
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    Note over C,S: 【アクション】非同期・進捗通知あり
+    C->>S: Goal
+    loop 処理中（何度も）
+        S-->>C: Feedback（進捗）
+    end
+    S->>C: Result（完了結果）
+    C-->>S: Cancel（途中中断も可）
 ```
 
 ---
