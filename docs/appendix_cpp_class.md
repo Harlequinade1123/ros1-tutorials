@@ -309,6 +309,8 @@ void Robot::showStatus() const
 
 ROS のコードを読むと，見慣れない書き方がいくつか出てきます．付録として整理しておきます．
 
+> テンプレート・名前空間・スマートポインタ（`ConstPtr`・`->`）など，クラス以外のC++の仕組みについては [付録: ROSのコードをC++として読む](appendix_ros_cpp.md) を参照してください．
+
 ### `this` キーワード
 
 クラスの中で使える特別なキーワードで，「自分自身のオブジェクトへのポインタ」です．
@@ -360,4 +362,4 @@ boost::bind(&MyClass::callback, this, _1)
 
 ---
 
-[→ 14章: クラスを使った ROS プログラミング](14_ros_with_class.md)
+[→ 14章: クラスを使った ROS プログラミング](14_ros_with_class.md) ｜ [→ 付録D: ROSのコードをC++として読む](appendix_ros_cpp.md)

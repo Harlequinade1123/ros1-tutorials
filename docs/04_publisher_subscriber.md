@@ -161,6 +161,8 @@ talker が publish
 コールバック引数の型 `std_msgs::String::ConstPtr` は「`std_msgs::String` 型メッセージへのポインタ」です．  
 `msg->data` でメッセージの文字列にアクセスします（`.` ではなく `->` を使うのはポインタのためです）．
 
+> `ConstPtr`・`->`・テンプレート `<>` などの記法がC++としてどういう意味かは，[付録: ROSのコードをC++として読む](appendix_ros_cpp.md) にまとめています．
+
 ---
 
 ## Publisher と Subscriber を両方持つノードを書く（relay.cpp）

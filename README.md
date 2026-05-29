@@ -31,6 +31,7 @@ C++ の基礎知識はあるが，ROS は初めてという方を対象にした
 | 付録A | [コマンドリファレンス](docs/appendix_commands.md) | Ubuntu・ROS コマンド早見表 |
 | 付録B | [CMake とビルドの仕組み](docs/appendix_cmake.md) | コンパイルの基礎・CMake・catkin の違い |
 | 付録C | [C++ クラス入門](docs/appendix_cpp_class.md) | クラス・コンストラクタ・メンバ変数の基礎 |
+| 付録D | [ROSのコードをC++として読む](docs/appendix_ros_cpp.md) | 名前空間・テンプレート・スマートポインタ・関数ポインタ |
 
 ## Kobuki 演習
 
