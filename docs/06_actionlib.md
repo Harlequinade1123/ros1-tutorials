@@ -13,17 +13,78 @@
 | キャンセル | なし | なし | あり |
 | 主な用途 | センサーデータ配信 | 一時的な設定変更 | 移動・把持など長時間処理 |
 
-```
-【サービス】
-Client ──(Request)──→ Server
-Client ←─(Response)── Server（ブロック：完了まで待つ）
+> **サービス（Service）**
 
-【アクション】
-Client ──(Goal)──────────────────→ Server
-Client ←──(Feedback: 進捗)──────── Server（処理中，何度も）
-Client ←──(Result: 完了結果)──────  Server（処理完了時）
-Client ──(Cancel)────────────────→ Server（途中中断）
+```mermaid
+graph LR
+    subgraph clientNode ["client_node"]
+        C["Client"]
+    end
+    subgraph serverNode ["server_node"]
+        S["Server"]
+    end
+    C -->|"① Request"| S
+    S -->|"② Response"| C
 ```
+
+1. Client が Request を送る（**完了まで待機・ブロック**）
+2. Server が処理して Response を1回だけ返す
+
+<details>
+<summary>詳細：メッセージの流れ</summary>
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    C->>S: Request
+    Note over C: 完了まで待機（ブロック）
+    S->>C: Response
+```
+
+</details>
+
+> **アクション（Action）**
+
+```mermaid
+graph LR
+    subgraph clientNode ["client_node"]
+        C["Client"]
+    end
+    subgraph serverNode ["server_node"]
+        S["Server"]
+    end
+    C -->|"① Goal"| S
+    S -->|"② Feedback（繰り返し）"| C
+    S -->|"③ Result"| C
+    C -.->|"Cancel（任意）"| S
+```
+
+1. Client が Goal を送る
+2. Server が処理しながら Feedback を **繰り返し** 送る
+3. 完了したら Server が Result を返す
+4. 途中でキャンセルする場合は Cancel を送れる → Server が Preempted を返す
+
+<details>
+<summary>詳細：メッセージの流れ</summary>
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    C->>S: Goal
+    loop 処理中（何度も）
+        S-->>C: Feedback
+    end
+    alt 正常完了
+        S->>C: Result
+    else キャンセル
+        C->>S: Cancel
+        S->>C: Preempted
+    end
+```
+
+</details>
 
 ---
 
