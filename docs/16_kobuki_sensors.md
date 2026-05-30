@@ -265,10 +265,12 @@ int main(int argc, char **argv)
 **動作フロー：**
 
 ```mermaid
-stateDiagram-v2
-    [*] --> MOVING
-    MOVING --> BACKING_UP : バンパー接触
-    BACKING_UP --> MOVING : 1秒後（繰り返す）
+flowchart TD
+    A([スタート]) --> B[前進]
+    B --> C{バンパー接触？}
+    C -->|いいえ| B
+    C -->|はい| D[後退（1 秒）]
+    D --> B
 ```
 
 ### ヒント
