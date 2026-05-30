@@ -48,13 +48,15 @@ graph LR
         pubC["Publisher"]
     end
     pr(["/processed<br/>トピック"])
-    ds["別のノード（省略）"]
+    subgraph dsNode ["別のノード（省略）"]
+        dsSub["Subscriber"]
+    end
 
     pubA -->|"publish"| ch
     ch -->|"subscribe"| subB
     ch -->|"subscribe"| subC
     pubC -->|"publish"| pr
-    pr -->|"subscribe"| ds
+    pr -->|"subscribe"| dsSub
 ```
 
 「ノードがトピックに対して Publisher として登録する」  
@@ -222,15 +224,22 @@ relay ノードは `/chatter` の Subscriber であり，`/chatter_relay` の Pu
 
 ```mermaid
 graph TD
-    talker["talker ノード"]
+    subgraph talkerNode ["talker ノード"]
+        tPub["Publisher"]
+    end
     ch(["/chatter"])
-    relay["relay ノード"]
+    subgraph relayNode ["relay ノード"]
+        rSub["Subscriber"]
+        rPub["Publisher"]
+    end
     ch_r(["/chatter_relay"])
-    listener["listener ノード<br/>（rostopic echo で代用可）"]
-    talker -->|"publish"| ch
-    ch -->|"subscribe"| relay
-    relay -->|"publish"| ch_r
-    ch_r -->|"subscribe"| listener
+    subgraph listenerNode ["listener ノード（rostopic echo で代用可）"]
+        lSub["Subscriber"]
+    end
+    tPub -->|"publish"| ch
+    ch -->|"subscribe"| rSub
+    rPub -->|"publish"| ch_r
+    ch_r -->|"subscribe"| lSub
 ```
 
 ---
