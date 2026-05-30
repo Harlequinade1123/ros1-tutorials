@@ -17,7 +17,13 @@
 
 ```mermaid
 graph LR
-    C["Client"] -->|"① Request"| S["Server"]
+    subgraph clientNode ["client_node"]
+        C["Client"]
+    end
+    subgraph serverNode ["server_node"]
+        S["Server"]
+    end
+    C -->|"① Request"| S
     S -->|"② Response"| C
 ```
 
@@ -42,7 +48,13 @@ sequenceDiagram
 
 ```mermaid
 graph LR
-    C["Client"] -->|"① Goal"| S["Server"]
+    subgraph clientNode ["client_node"]
+        C["Client"]
+    end
+    subgraph serverNode ["server_node"]
+        S["Server"]
+    end
+    C -->|"① Goal"| S
     S -->|"② Feedback（繰り返し）"| C
     S -->|"③ Result"| C
     C -.->|"Cancel（任意）"| S
