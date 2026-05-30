@@ -35,6 +35,8 @@ rosrun rviz rviz
 
 ## 画面構成
 
+![RViz 画面構成](images/RViz_screen.png)
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  [ツールバー]  Interact / Move Camera / ...              │
