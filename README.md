@@ -28,6 +28,7 @@ C++ の基礎知識はあるが，ROS は初めてという方を対象にした
 | 12 | [tf / tf2](docs/12_tf.md) | 座標フレーム間の変換を管理する |
 | 13 | [C++ クラス入門](docs/13_cpp_class_basics.md) | クラスの概要（詳細は付録C） |
 | 14 | [クラスを使った ROS プログラミング](docs/14_ros_with_class.md) | ノードをクラスで書き直す・サービス・アクションのクラス版 |
+| 15 | [ROS 総合演習](docs/15_ros_exercises.md) | 2 ノードシステムの構築から，カスタムメッセージ・アクション・ウォッチドッグなどの発展演習まで |
 | 付録A | [コマンドリファレンス](docs/appendix_commands.md) | Ubuntu・ROS コマンド早見表 |
 | 付録B | [CMake とビルドの仕組み](docs/appendix_cmake.md) | コンパイルの基礎・CMake・catkin の違い |
 | 付録C | [C++ クラス入門](docs/appendix_cpp_class.md) | クラス・コンストラクタ・メンバ変数の基礎 |
@@ -37,9 +38,9 @@ C++ の基礎知識はあるが，ROS は初めてという方を対象にした
 
 | # | 章タイトル | 概要 |
 |---|-----------|------|
-| 15 | [Kobuki 基礎](docs/15_kobuki_basics.md) | 速度コマンド・前進・往復動作（演習 1〜2） |
-| 16 | [Kobuki センサー](docs/16_kobuki_sensors.md) | バンパー・崖・オドメトリ（演習 3〜5） |
-| 17 | [クラスを使った Kobuki プログラミング](docs/17_kobuki_class.md) | クラス設計・LED/サウンド制御（演習 6〜7） |
+| 16 | [Kobuki 基礎](docs/16_kobuki_basics.md) | 速度コマンド・前進・往復動作（演習 1〜2） |
+| 17 | [Kobuki センサー](docs/17_kobuki_sensors.md) | バンパー・崖・オドメトリ（演習 3〜5） |
+| 18 | [クラスを使った Kobuki プログラミング](docs/18_kobuki_class.md) | クラス設計・LED/サウンド制御（演習 6〜7） |
 
 ## 読み進め方
 

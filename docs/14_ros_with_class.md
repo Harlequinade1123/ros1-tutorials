@@ -569,4 +569,4 @@ add_dependencies(count_down_server_class ${${PROJECT_NAME}_EXPORTED_TARGETS} ${c
 - **dynamic_reconfigure**：実行中のパラメータ動的変更
 - **ROS2 への移行**：概念は共通，コードの書き方が変わる
 
-[→ 15章: Kobuki 基礎](15_kobuki_basics.md)
+[→ 15章: ROS 総合演習](15_ros_exercises.md)
