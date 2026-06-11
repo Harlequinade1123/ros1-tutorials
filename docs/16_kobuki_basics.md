@@ -1,4 +1,4 @@
-# 15章: Kobuki 基礎 ── 速度コマンドを送る
+# 16章: Kobuki 基礎 ── 速度コマンドを送る
 
 ## この章を始める前に
 
@@ -334,4 +334,4 @@ int main(int argc, char **argv)
 
 ---
 
-[→ 16章: Kobuki センサー](16_kobuki_sensors.md)
+[→ 17章: Kobuki センサー](17_kobuki_sensors.md)
