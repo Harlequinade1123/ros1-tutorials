@@ -226,7 +226,7 @@ rosrun ros_tutorial hello_node
 1. catkin create pkg でパッケージ作成
 2. src/ に .cpp ファイルを書く
 3. CMakeLists.txt に add_executable / target_link_libraries を追加
-4. catkin build でビルド
+4. catkin build でビルド（必要に応じて source ~/catkin_ws/devel/setup.bash ）
 5. rosrun で実行
 ```
 
