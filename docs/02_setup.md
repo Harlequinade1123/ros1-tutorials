@@ -14,20 +14,27 @@
 
 ターミナルを開いて，以下のコマンドを上から順に実行してください．
 
-### 1. パッケージリストの追加
+> **注意**: NoeticとUbuntu 20.04は、いずれも通常サポートを終了しています．インターネットに公開する本番機ではなく、隔離した学習・既存システム保守用の環境で使用してください．新規開発ではROS 2を選択してください．
+
+### 1. ROSのAPT設定パッケージをインストール
+
+古い`apt-key`方式ではなく、ROS公式の`ros-apt-source`パッケージで署名鍵とリポジトリ設定を追加します．この手順はUbuntu 20.04（Focal）専用です．
 
 ```bash
-sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-```
-
-### 2. 認証キーの追加
-
-```bash
+sudo apt update
 sudo apt install curl -y
-curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+
+ROS_APT_SOURCE_VERSION=$(curl -s \
+  https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest \
+  | grep -F '"tag_name"' | awk -F'"' '{print $4}')
+
+curl -L -o /tmp/ros-apt-source.deb \
+  "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros-apt-source_${ROS_APT_SOURCE_VERSION}.focal_all.deb"
+
+sudo apt install /tmp/ros-apt-source.deb
 ```
 
-### 3. ROS Noetic のインストール
+### 2. ROS Noetic のインストール
 
 ```bash
 sudo apt update
@@ -36,7 +43,7 @@ sudo apt install ros-noetic-desktop-full -y
 
 > `desktop-full` を選ぶと，rviz などの GUI ツールも一緒にインストールされます．インストールには数分〜十数分かかります．
 
-### 4. rosdep の初期化
+### 3. rosdep の初期化
 
 `rosdep` は依存パッケージを自動でインストールするツールです．
 
@@ -46,7 +53,9 @@ sudo rosdep init
 rosdep update
 ```
 
-### 5. 環境変数の設定
+> `rosdep`がすでに初期化済みの場合、`sudo rosdep init`は「default sources list file already exists」と表示します．その場合は削除せず、`rosdep update`へ進んでください．
+
+### 4. 環境変数の設定
 
 ROS のコマンドを使えるようにするため，`.bashrc`（ターミナル起動時に自動実行される設定ファイル）に追記します．
 
@@ -55,7 +64,7 @@ echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### 6. ビルドツールのインストール
+### 5. ビルドツールのインストール
 
 ```bash
 sudo apt install python3-catkin-tools python3-osrf-pycommon -y
