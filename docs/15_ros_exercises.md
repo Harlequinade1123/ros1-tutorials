@@ -633,6 +633,7 @@ int main(int argc, char** argv)
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <ros_exercises/CountUpAction.h>
+#include <string>
 
 void feedbackCb(const ros_exercises::CountUpFeedbackConstPtr& fb)
 {

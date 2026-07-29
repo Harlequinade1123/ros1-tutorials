@@ -262,6 +262,7 @@ int main(int argc, char **argv)
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <ros_tutorial/CountDownAction.h>
+#include <boost/bind.hpp>
 
 void feedbackCallback(
     const ros_tutorial::CountDownFeedbackConstPtr &feedback)
@@ -302,6 +303,9 @@ int main(int argc, char **argv)
     {
         ROS_WARN("タイムアウト：キャンセルを送信します");
         client.cancelGoal();
+        // キャンセル後の終端状態を短時間待ってから終了する
+        client.waitForResult(ros::Duration(5.0));
+        ROS_INFO("状態: %s", client.getState().toString().c_str());
     }
 
     return 0;
@@ -385,10 +389,10 @@ rosrun ros_tutorial count_down_client
 クライアントを実行してカウントダウンが始まったら，別ターミナルで：
 
 ```bash
-rostopic pub /count_down/cancel actionlib_msgs/GoalID -- {}
+rostopic pub -1 /count_down/cancel actionlib_msgs/GoalID '{}'
 ```
 
-サーバーが「キャンセルされました」を出力し，処理を中断することを確認できます．
+空の`GoalID`は、その時点までに受理された全ゴールをキャンセルする指定です．サーバーが「キャンセルされました」を出力し，処理を中断することを確認できます．実運用のクライアントでは、ほかのゴールまで止めないよう`client.cancelGoal()`で自分のゴールをキャンセルします．
 
 ---
 
