@@ -56,7 +56,6 @@ public:
         while (ros::ok())
         {
             publish();
-            ros::spinOnce();
             rate.sleep();
         }
     }

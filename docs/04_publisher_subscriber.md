@@ -94,14 +94,14 @@ int main(int argc, char **argv)
 
     // Publisher の作成
     // "chatter" というトピック名で std_msgs::String 型のメッセージを送る
-    // 第2引数はキューサイズ（送れなかったメッセージを何個まで保持するか）
+    // 第2引数は送信キューサイズ（未送信メッセージを何個まで保持するか）
     ros::Publisher pub = nh.advertise<std_msgs::String>("chatter", 10);
 
     // ループの周期を 10Hz に設定
     ros::Rate rate(10);
 
     int count = 0;
-    while (ros::ok())   // roscore が生きている間はループ
+    while (ros::ok())   // Ctrl+Cやros::shutdown()などで終了要求が来るまでループ
     {
         // メッセージの作成
         std_msgs::String msg;
@@ -114,7 +114,6 @@ int main(int argc, char **argv)
         // メッセージの送信
         pub.publish(msg);
 
-        ros::spinOnce();
         rate.sleep();
     }
 
@@ -384,16 +383,15 @@ average rate: 10.000
 | `ros::spin()` | コールバックを待ち続ける（終了しない） |
 | `ros::spinOnce()` | コールバックを 1 回だけ処理して即座に返る |
 
-talker では自分でループを書くため `spinOnce()` を使い，listener や relay では待ち続けるだけでよいため `spin()` を使います．
+自分でループを回しながらSubscriber・Timerなどのコールバックも処理するノードでは、ループ内で`spinOnce()`を呼びます．listenerやrelayのようにコールバック待ちだけでよいノードでは`spin()`を使います．
 
-### なぜ talker は `ros::spinOnce()` が必要なのか？
+### talkerに`spinOnce()`は必要？
 
-talker では Subscriber を使いませんが，ROS 内部の通信処理（接続管理など）のために必要です．  
-ループ内には `ros::spinOnce()` を書く習慣をつけておきましょう．
+このtalkerはコールバックを登録していないため、`spinOnce()`は不要です．Publisherの接続管理や送信はroscpp内部のスレッドで処理されます．後からSubscriber、Timer、サービスなどのコールバックを追加した場合は、`spin()`、`spinOnce()`、またはAsyncSpinnerのいずれかでコールバックを処理します．
 
 ### 1つのノードに Publisher や Subscriber はいくつでも作れる？
 
-はい，何個でも作れます．実際のロボットシステムでは，1つのノードが複数のトピックを送受信することが普通です．  
+はい，必要な数だけ複数作れます（実際の上限はメモリや接続数などの資源に依存します）．実際のロボットシステムでは，1つのノードが複数のトピックを送受信することが普通です．
 例えばナビゲーションノードは「地図・センサ・目標位置」を受け取りながら「速度指令」を送ります．
 
 ---
