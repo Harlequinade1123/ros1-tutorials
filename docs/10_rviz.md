@@ -68,7 +68,7 @@ rosrun rviz rviz
 | 左ドラッグ | 視点を回転 |
 | 中ドラッグ（または Shift+左） | 視点を平行移動 |
 | スクロール | ズームイン・アウト |
-| `0` キー | 視点をリセット |
+| `z` キー | 視点を原点付近へ戻す（Viewsパネルの「Zero」） |
 
 ---
 
@@ -169,9 +169,26 @@ int main(int argc, char **argv)
 }
 ```
 
-> **`ros::Time::now()` について**: ROS の現在時刻を返す関数です．メッセージのヘッダに設定することで「このデータがいつ生成されたか」を記録します．RViz や rosbag がタイムスタンプを使って表示・記録を管理するため，`header.stamp` には常に設定するのが慣習です．
+> **`ros::Time::now()` について**: ROS の現在時刻を返す関数です．メッセージのヘッダに設定すると「このデータがいつ生成されたか」を表せます．RVizはTF変換時刻の判断にもこの値を使います．メッセージ型や用途によってはゼロ時刻に意味があるため、常に現在時刻を入れるのではなく、その型の仕様に従って設定します．なお、rosbagの記録時刻は通常、メッセージの`header.stamp`そのものではなくrosbagが受信した時刻です．
 
 ### CMakeLists.txt に追記
+
+`find_package(catkin REQUIRED COMPONENTS ...)`の既存リストへ`visualization_msgs`を追加します。これまでの依存は残してください：
+
+```cmake
+find_package(catkin REQUIRED COMPONENTS
+  # ...これまでの依存パッケージ...
+  visualization_msgs  # 追加
+)
+```
+
+`package.xml`にも依存を追加します：
+
+```xml
+<depend>visualization_msgs</depend>
+```
+
+続いて実行ファイルを追加します：
 
 ```cmake
 add_executable(marker_publisher src/marker_publisher.cpp)
