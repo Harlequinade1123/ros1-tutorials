@@ -49,6 +49,8 @@ float64 speed
 
 変更箇所が複数あります．元のファイルを開いて，以下のように変更・追記してください．
 
+> このチュートリアルを順番に進めている場合、5章の`AddTwoInts.srv`と6章の`CountDown.action`の設定は削除しません．`find_package`や`generate_messages`は複数作らず、既存の項目へ累積して追加します．この章末に累積後の全体例を示します．
+
 #### 1. `find_package` に `message_generation` を追加
 
 変更前：
@@ -114,7 +116,7 @@ add_dependencies(listener ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_
 
 ### package.xml の変更
 
-`<buildtool_depend>catkin</buildtool_depend>` の下に以下を追加：
+未追加の場合のみ、`<buildtool_depend>catkin</buildtool_depend>` の下に以下を追加：
 
 ```xml
 <build_depend>message_generation</build_depend>

@@ -15,10 +15,10 @@ Kobuki 用のコードは専用パッケージ `kobuki_tutorial` にまとめま
 
 ```bash
 cd ~/catkin_ws/src
-catkin create pkg kobuki_tutorial --catkin-deps roscpp geometry_msgs sensor_msgs nav_msgs
+catkin create pkg kobuki_tutorial --catkin-deps roscpp geometry_msgs sensor_msgs nav_msgs kobuki_msgs
 ```
 
-> **旧コマンド**: `catkin_create_pkg kobuki_tutorial roscpp geometry_msgs sensor_msgs nav_msgs` でも同じ結果になります．
+> **旧コマンド**: `catkin_create_pkg kobuki_tutorial roscpp geometry_msgs sensor_msgs nav_msgs kobuki_msgs` でも同じ結果になります．`kobuki_msgs`は17章以降で使用します．環境にない場合は、使用するKobukiドライバに対応したメッセージパッケージを先に導入してください．
 
 作成後，一度ビルドしておきます：
 
